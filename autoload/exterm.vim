@@ -20,20 +20,23 @@ function! exterm#filetype()
 endfunction
 
 function! exterm#new(args) abort
+  call exterm#close()
+  execute "botright terminal" a:args
+endfunction
+
+function! exterm#close()
   if bufwinnr(exterm#bufnr()) > 0
     execute bufwinnr(exterm#bufnr()) . 'wincmd w'
     execute 'quit'
+    return 0
   endif
-  execute "botright terminal" a:args
+  return -1
 endfunction
 
 function! exterm#toggle() abort
   if exterm#bufnr() < 0
     execute "botright terminal"
-  elseif bufwinnr(exterm#bufnr()) > 0
-    execute bufwinnr(exterm#bufnr()) . 'wincmd w'
-    execute 'quit'
-  else
+  elseif exterm#close() < 0
     let l:term_height = term_getsize(exterm#bufnr())[0]
     let l:term_status = term_getstatus(exterm#bufnr())
     let l:cmd = printf('botright%s ', l:term_height)
