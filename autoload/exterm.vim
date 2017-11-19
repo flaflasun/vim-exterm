@@ -20,6 +20,10 @@ function! exterm#filetype()
 endfunction
 
 function! exterm#new(args) abort
+  if bufwinnr(exterm#bufnr()) > 0
+    execute bufwinnr(exterm#bufnr()) . 'wincmd w'
+    execute 'quit'
+  endif
   execute "botright terminal" a:args
 endfunction
 
