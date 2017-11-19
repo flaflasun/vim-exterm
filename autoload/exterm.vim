@@ -40,7 +40,7 @@ function! exterm#toggle() abort
     let l:term_height = term_getsize(exterm#bufnr())[0]
     let l:term_status = term_getstatus(exterm#bufnr())
     let l:cmd = printf('botright%s ', l:term_height)
-    execute l:cmd . "new"
+    execute l:cmd . "split"
     execute "buffer + " exterm#bufnr()
 
     if l:term_status == "running,normal"
