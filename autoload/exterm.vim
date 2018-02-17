@@ -11,8 +11,13 @@ if !exists('g:exterm_close')
   let g:exterm_close = 0
 endif
 
+if !exists('g:exterm_shell')
+  let g:exterm_shell = ""
+endif
+
 let s:terminal_option = g:exterm_close == 1 ? "++close" : ""
-let s:terminal_cmd = "botright terminal" . s:terminal_option
+let s:terminal_shell = g:exterm_shell
+let s:terminal_cmd = "botright terminal" . s:terminal_option . " " . s:terminal_shell
 
 function! exterm#bufnew()
   if &buftype == "terminal" && &filetype == ""
@@ -28,7 +33,11 @@ endfunction
 
 function! exterm#new(args) abort
   call exterm#close()
-  execute s:terminal_cmd a:args
+  let l:terminal_cmd = s:terminal_cmd
+  if a:args != "" && g:exterm_close
+    let l:terminal_cmd = "botright terminal"
+  endif
+  execute l:terminal_cmd a:args
 endfunction
 
 function! exterm#close()
