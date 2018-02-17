@@ -7,6 +7,13 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
+if !exists('g:exterm_close')
+  let g:exterm_close = 0
+endif
+
+let s:terminal_option = g:exterm_close == 1 ? "++close" : ""
+let s:terminal_cmd = "botright terminal" . s:terminal_option
+
 function! exterm#bufnew()
   if &buftype == "terminal" && &filetype == ""
     set filetype=terminal
@@ -21,7 +28,7 @@ endfunction
 
 function! exterm#new(args) abort
   call exterm#close()
-  execute "botright terminal" a:args
+  execute s:terminal_cmd a:args
 endfunction
 
 function! exterm#close()
@@ -37,7 +44,7 @@ endfunction
 
 function! exterm#toggle() abort
   if exterm#bufnr() < 0
-    execute "botright terminal"
+    execute s:terminal_cmd
   elseif exterm#close() < 0
     let l:term_height = term_getsize(exterm#bufnr())[0]
     let l:term_status = term_getstatus(exterm#bufnr())
