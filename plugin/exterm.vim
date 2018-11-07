@@ -1,6 +1,6 @@
 scriptencoding utf-8
 
-if exists('g:loaded_exterm')
+if exists('g:loaded_exterm') || v:version < 800
   finish
 endif
 let g:loaded_exterm = 1
