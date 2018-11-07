@@ -41,14 +41,17 @@ function! exterm#new(args) abort
 endfunction
 
 function! exterm#close()
-  let l:exist_buf_num = winnr()
-  if bufwinnr(exterm#bufnr()) > 0
-    execute bufwinnr(exterm#bufnr()) . 'wincmd w'
-    execute 'quit'
-    execute l:exist_buf_num . 'wincmd w'
-    return 0
+  let l:current_buf_num = winnr()
+  let l:terminal_buf_num = bufwinnr(exterm#bufnr())
+  if l:terminal_buf_num < 0
+    return -1
   endif
-  return -1
+  execute l:terminal_buf_num . 'wincmd w'
+  execute 'quit'
+  if l:current_buf_num != l:terminal_buf_num
+    execute l:current_buf_num . 'wincmd w'
+  endif
+  return 0
 endfunction
 
 function! exterm#toggle() abort
